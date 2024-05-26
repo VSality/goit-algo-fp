@@ -38,6 +38,50 @@ def draw_tree(tree_root):
     nx.draw(tree, pos=pos, labels=labels, arrows=False, node_size=2500, node_color=colors)
     plt.show()
 
+
+def bfs(tree_root):
+    queue = deque([tree_root])
+    visited = set()
+    color = 0
+    current_color = 1.0
+
+    while queue:
+        node = queue.popleft()
+        if node.id not in visited:
+            visited.add(node.id)
+            
+            color = plt.cm.Blues(current_color)  # Використання градієнта від темно-синього до світло-синього
+            node.color = f'#{int(color[0] * 255):02x}{int(color[1] * 255):02x}{int(color[2] * 255):02x}'
+            current_color -= 0.15
+            
+            print(node.val)
+
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+                
+                
+def dfs(tree_root):
+    stack = [tree_root]
+    visited = set()
+    color = 0
+    current_color = 1.0
+
+    while stack:
+        node = stack.pop()
+        if node.id not in visited:
+            visited.add(node.id)
+            
+            color = plt.cm.Blues(current_color)  # Використання градієнта від темно-синього до світло-синього
+            node.color = f'#{int(color[0] * 255):02x}{int(color[1] * 255):02x}{int(color[2] * 255):02x}'
+            current_color -= 0.15
+
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+                
 # Створення дерева
 root = Node(0)
 root.left = Node(4)
@@ -46,43 +90,12 @@ root.left.right = Node(10)
 root.right = Node(1)
 root.right.left = Node(3)
 
-# Відображення дерева
+bfs(root)
+
+# Відображення дерева після BFS
 draw_tree(root)
 
-def bfs_iterative(graph, start):
-    # Ініціалізація порожньої множини для зберігання відвіданих вершин
-    visited = set()
-    # Ініціалізація черги з початковою вершиною
-    queue = deque([start])
+dfs(root)
 
-    while queue:  # Поки черга не порожня, продовжуємо обхід
-        # Вилучаємо першу вершину з черги
-        vertex = queue.popleft()
-        # Перевіряємо, чи була вершина відвідана раніше
-        if vertex not in visited:
-            # Якщо не була відвідана, друкуємо її
-
-            print(vertex)
-
-            # Додаємо вершину до множини відвіданих вершин
-            visited.add(vertex)
-            # Додаємо всіх невідвіданих сусідів вершини до кінця черги
-            # Операція різниці множин вилучає вже відвідані вершини зі списку сусідів
-            queue.extend(set(graph[vertex]) - visited)
-
-            print(visited)
-    # Повертаємо множину відвіданих вершин після завершення обходу
-    return visited
-
-# Представлення графа за допомогою списку суміжності
-graph = {
-    'A': ['B', 'C'],
-    'B': ['A', 'D', 'E'],
-    'C': ['A', 'F'],
-    'D': ['B'],
-    'E': ['B', 'F'],
-    'F': ['C', 'E']
-}
-
-# Запуск алгоритму BFS
-bfs_iterative(graph, 'A')
+# Відображення дерева після DFS
+draw_tree(root)
